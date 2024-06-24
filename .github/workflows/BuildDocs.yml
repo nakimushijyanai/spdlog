@@ -21,11 +21,16 @@ jobs:
       - name: Install Doxygen
         run: brew install doxygen
 
-      - name: Install docsetutil alternative
+      - name: Install xcode-install gem
+        run: sudo gem install xcode-install
+
+      - name: Install Xcode 9.2
         run: |
-          git clone https://github.com/SwiftDocOrg/DocSetUtil.git
-          cd DocSetUtil
-          sudo make install
+          xcversion install 9.2
+          sudo xcode-select --switch /Applications/Xcode-9.2.app
+
+      - name: Verify Xcode version
+        run: xcodebuild -version
 
       - name: Generate Doxyfile
         run: doxygen -g Doxyfile
