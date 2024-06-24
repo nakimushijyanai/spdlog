@@ -46,10 +46,18 @@ jobs:
       - name: List Output Directory
         run: ls -R ./docs
 
+      - name: Print current Directory
+        run: pwd
+        
       - name: Run make inside the generated folder
         run: |
-          cd $(find ./docs -type d -name "*.docset" | head -n 1)
+          cd ./docs/html
           make
+
+      - name: Print current Directory
+        run: pwd
+      - name: List Output Directory
+        run: ls -R ./docs
 
       - name: Upload Documentation as Artifact
         uses: actions/upload-artifact@v3
