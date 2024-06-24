@@ -1,0 +1,42 @@
+name: DocSet
+
+on:
+  push
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+permissions:
+  contents: write
+  
+
+jobs:
+  generate-docs:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Doxygen
+        run: brew install doxygen
+
+      - name: Generate Doxyfile
+        run: doxygen -g Doxyfile
+
+      - name: Modify Doxyfile for Dash Docset
+        run: |
+          sed -i '' 's/GENERATE_TAGFILE *=.*/GENERATE_TAGFILE = your_project.tag/' Doxyfile
+          sed -i '' 's/GENERATE_DOCSET *=.*/GENERATE_DOCSET = YES/' Doxyfile
+          sed -i '' 's/DOCSET_FEEDNAME *=.*/DOCSET_FEEDNAME = "YourProjectName"/' Doxyfile
+          sed -i '' 's/DOCSET_BUNDLE_ID *=.*/DOCSET_BUNDLE_ID = "com.yourdomain.yourproject"/' Doxyfile
+          sed -i '' 's|OUTPUT_DIRECTORY *=.*|OUTPUT_DIRECTORY = ./docs|' Doxyfile
+
+      - name: Generate Documentation
+        run: doxygen Doxyfile
+
+      - name: Upload Documentation as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs/docset
