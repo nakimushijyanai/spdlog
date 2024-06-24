@@ -8,8 +8,8 @@ env:
   
 permissions:
   contents: write
-  
 
+  
 jobs:
   generate-docs:
     runs-on: macos-latest
@@ -21,22 +21,42 @@ jobs:
       - name: Install Doxygen
         run: brew install doxygen
 
+      - name: Install docsetutil alternative
+        run: |
+          git clone https://github.com/omz/Dash-User-Contributions.git
+          cp Dash-User-Contributions/docsetutil /usr/local/bin/
+          chmod +x /usr/local/bin/docsetutil
+          rm -rf Dash-User-Contributions
+
       - name: Generate Doxyfile
         run: doxygen -g Doxyfile
 
       - name: Modify Doxyfile for Dash Docset
         run: |
-          sed -i '' 's/GENERATE_TAGFILE *=.*/GENERATE_TAGFILE = your_project.tag/' Doxyfile
+          sed -i '' 's/GENERATE_TAGFILE *=.*/GENERATE_TAGFILE = spdlog.tag/' Doxyfile
           sed -i '' 's/GENERATE_DOCSET *=.*/GENERATE_DOCSET = YES/' Doxyfile
-          sed -i '' 's/DOCSET_FEEDNAME *=.*/DOCSET_FEEDNAME = "YourProjectName"/' Doxyfile
-          sed -i '' 's/DOCSET_BUNDLE_ID *=.*/DOCSET_BUNDLE_ID = "com.yourdomain.yourproject"/' Doxyfile
+          sed -i '' 's/DOCSET_FEEDNAME *=.*/DOCSET_FEEDNAME = "spdlog"/' Doxyfile
+          sed -i '' 's/DOCSET_BUNDLE_ID *=.*/DOCSET_BUNDLE_ID = "com.ownuse.spdlog"/' Doxyfile
           sed -i '' 's|OUTPUT_DIRECTORY *=.*|OUTPUT_DIRECTORY = ./docs|' Doxyfile
+          sed -i '' 's|INPUT *=.*|INPUT = include src|' Doxyfile
+          sed -i '' 's/RECURSIVE *=.*/RECURSIVE = YES/' Doxyfile
+          sed -i '' 's/GENERATE_TREEVIEW *=.*/GENERATE_TREEVIEW = YES/' Doxyfile
+          sed -i '' 's/SEARCHENGINE *=.*/SEARCHENGINE = YES/' Doxyfile
+          sed -i '' 's/DISABLE_INDEX *=.*/DISABLE_INDEX = YES/' Doxyfile
 
       - name: Generate Documentation
         run: doxygen Doxyfile
+
+      - name: Run make inside the generated folder
+        run: |
+          cd docs/html
+          make
+
+      - name: List Output Directory
+        run: ls -R ./docs
 
       - name: Upload Documentation as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: docs
-          path: docs/docset
+          path: ./docs/YourProjectName.docset
