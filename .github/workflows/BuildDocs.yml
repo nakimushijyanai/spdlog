@@ -51,7 +51,7 @@ jobs:
         
       - name: Run make inside the generated folder
         run: |
-          cd ./docs
+          cd ./docs/html
           make
 
       - name: Print current Directory
