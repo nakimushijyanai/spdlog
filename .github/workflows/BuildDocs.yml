@@ -22,11 +22,7 @@ jobs:
         run: brew install doxygen
 
       - name: Install docsetutil alternative
-        run: |
-          git clone https://github.com/omz/Dash-User-Contributions.git
-          cp Dash-User-Contributions/docsetutil /usr/local/bin/
-          chmod +x /usr/local/bin/docsetutil
-          rm -rf Dash-User-Contributions
+        run: brew install swiftdocorg/formulae/docsetutil
 
       - name: Generate Doxyfile
         run: doxygen -g Doxyfile
@@ -59,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: docs
-          path: ./docs/YourProjectName.docset
+          path: ./docs/spdlog.docset
