@@ -43,16 +43,16 @@ jobs:
       - name: Generate Documentation
         run: doxygen Doxyfile
 
-      - name: Run make inside the generated folder
-        run: |
-          cd docs/html
-          make
-
       - name: List Output Directory
         run: ls -R ./docs
+
+      - name: Run make inside the generated folder
+        run: |
+          cd $(find ./docs -type d -name "*.docset" | head -n 1)
+          make
 
       - name: Upload Documentation as Artifact
         uses: actions/upload-artifact@v3
         with:
           name: docs
-          path: ./docs/spdlog.docset
+          path: $(find ./docs -type d -name "*.docset" | head -n 1)
