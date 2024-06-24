@@ -52,7 +52,8 @@ jobs:
       - name: Run make inside the generated folder
         run: |
           cd ./docs/html/
-          make
+          pwd
+          ls -R
 
       - name: Print current Directory
         run: pwd
