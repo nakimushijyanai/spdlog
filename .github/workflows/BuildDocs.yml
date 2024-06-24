@@ -46,12 +46,12 @@ jobs:
       - name: List Output Directory
         run: ls -R ./docs
 
-      - name: Print current Directory
+      - name: Print current Directory after your makes docs
         run: pwd
         
       - name: Run make inside the generated folder
         run: |
-          cd ./docs/html
+          cd ./docs/html/
           make
 
       - name: Print current Directory
