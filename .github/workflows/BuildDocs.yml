@@ -18,6 +18,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install Doxygen
+        run: brew install doxygen
+        
       - name: Generate Doxyfile
         run: doxygen -g Doxyfile
 
